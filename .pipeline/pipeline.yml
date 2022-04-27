@@ -3,6 +3,18 @@ kind: Pipeline
 metadata:
   name: pipeline-test
 spec:
+  params:
+    - name: repository
+      description: the git repo containing source code. If empty, the repository url will be found from toolchain
+      default: ""
+    - name: branch
+      description: the branch for the git repo
+      default: "master"
+    - name: revision
+      description: the git revision/commit for the git repo
+      default: ""
+    - name: pipeline-debug
+      default: "0"
   workspaces:
     - name: pipeline-ws
   tasks:
