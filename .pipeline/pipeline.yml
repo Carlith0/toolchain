@@ -5,7 +5,7 @@ metadata:
 spec:
   workspaces:
     - name: pipeline-ws
-tasks:
+  tasks:
     - name: extract-repository-url
       taskRef:
         name: toolchain-extract-value
