@@ -344,6 +344,35 @@ spec:
           value: "$(tasks.git-clone.results.git-repository),$(tasks.git-clone.results.git-commit),$(tasks.git-clone.results.git-branch)"
         - name: pipeline-debug
           value: $(params.pipeline-debug)
+    - name: check-health
+      taskRef:
+        name: iks-deploy-to-kubernetes
+      runAfter: [deploy-to-kubernetes]
+      params:
+        - name: shuttle-properties-file
+          value: "build.properties"
+        - name: cluster-region
+          value: $(params.dev-region)
+        - name: resource-group
+          value: $(params.dev-resource-group)
+        - name: cluster-name
+          value: $(params.cluster-name)
+        - name: setup-script
+          value: |
+            export CLUSTER_NAMESPACE="$(params.dev-cluster-namespace)"
+        - name: script
+          value: |
+            # uncomment to debug the script
+            # set -x
+            # copy the script below into your app code repo (e.g. ./scripts/check_health.sh) and 'source' it from your pipeline job
+            #    source ./scripts/check_health.sh
+            # alternatively, you can source it from online script:
+            #    source <(curl -sSL "$(params.commons-hosted-region)/scripts/check_health.sh"")
+            # ------------------
+            # Check liveness and readiness probes to confirm application is healthy
+            source <(curl -sSL "$(params.commons-hosted-region)/scripts/check_health.sh")
+        - name: pipeline-debug
+          value: $(params.pipeline-debug)
       workspaces:
         - name: artifacts
           workspace: pipeline-ws
